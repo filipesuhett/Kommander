@@ -1,0 +1,153 @@
+replicaCount: 1
+
+image:
+  repository: seu-repositorio/kommander
+  pullPolicy: IfNotPresent
+  # Substitua pelo short SHA do commit ou pela tag da sua imagem
+  tag: ""
+
+imagePullSecrets: []
+nameOverride: ""
+fullnameOverride: ""
+
+# As configurações do bot Kommander
+kommander:
+  # O token do Discord deve ser armazenado em um secret
+  # Crie um secret com `kubectl create secret generic kommander-secret --from-literal=discord-token='SEU_TOKEN_AQUI'`
+  # Ou preencha o secret.yaml nos templates
+  secretName: kommander-secret
+  secretKey: discord-token
+  guildId: "SEU_GUILD_ID"
+  channelName: "kommander"
+  timeout: "60"
+
+# Conteúdo dos arquivos de configuração
+# Os comandos do Flux foram removidos desta seção.
+rules: |
+  config:
+    RULES:
+      devops:
+        exclude_ns: []
+        verbs: [get, describe, list, delete, rollout restart]
+        types: [deployments, pods, namespaces, statefulsets, configmaps, services, ingresses, pods/log, replicasets, helmreleases, nodes]
+      dev-read:
+        exclude_ns: [kube-system, flux-system]
+        verbs: [get, describe, list]
+        types: [pods, services, deployments, statefulsets, ingress]
+      dev-write:
+        exclude_ns: [kube-system, flux-system]
+        verbs: [get, describe, list, delete, rollout restart]
+        types: [pods, deployments, statefulsets]
+
+commands: |
+  kommander:
+    commands:
+      - name: "get"
+        description: "Obtém um recurso do Kubernetes (pods, deployments, etc)."
+        verb: "get"
+        baseCommand: "kubectl get"
+        options:
+          - name: "recurso"
+            description: "O tipo de recurso a ser listado (ex: pods)."
+            required: true
+          - name: "namespace"
+            description: "O namespace do recurso (opcional para todos)."
+            required: false
+          - name: "nome"
+            description: "O nome específico do recurso (opcional)."
+            required: false
+          - name: "grep"
+            description: "Filtra a saída com o texto fornecido."
+            required: false
+      - name: "describe"
+        description: "Descreve um recurso do Kubernetes."
+        verb: "describe"
+        baseCommand: "kubectl describe"
+        options:
+          - name: "recurso"
+            description: "O tipo de recurso (ex: pod, deployment)."
+            required: true
+          - name: "nome"
+            description: "O nome do recurso."
+            required: true
+          - name: "namespace"
+            description: "O namespace do recurso."
+            required: true
+      - name: "delete"
+        description: "Deleta um recurso do Kubernetes."
+        verb: "delete"
+        baseCommand: "kubectl delete"
+        options:
+          - name: "recurso"
+            description: "O tipo de recurso (ex: pod)."
+            required: true
+          - name: "nome"
+            description: "O nome do recurso."
+            required: true
+          - name: "namespace"
+            description: "O namespace do recurso."
+            required: true
+      - name: "rollout"
+        description: "Executa o rollout restart em um recurso."
+        verb: "rollout restart"
+        baseCommand: "kubectl rollout restart"
+        options:
+          - name: "recurso"
+            description: "O tipo de recurso (deployment, statefulset)."
+            required: true
+          - name: "nome"
+            description: "O nome do recurso."
+            required: true
+          - name: "namespace"
+            description: "O namespace do recurso."
+            required: true
+      - name: "logs"
+        description: "Mostra os logs de um pod."
+        verb: "get"
+        baseCommand: "kubectl logs"
+        options:
+          - name: "pod"
+            description: "O nome do pod para ver os logs."
+            required: true
+          - name: "namespace"
+            description: "O namespace do pod."
+            required: true
+          - name: "grep"
+            description: "Filtra a saída dos logs."
+            required: false
+
+serviceAccount:
+  create: true
+  annotations: {}
+  name: ""
+
+podAnnotations: {}
+
+podSecurityContext: {}
+  # fsGroup: 2000
+
+securityContext: {}
+  # capabilities:
+  #   drop:
+  #   - ALL
+  # readOnlyRootFilesystem: true
+  # runAsNonRoot: true
+  # runAsUser: 1000
+
+resources: {}
+  # We usually recommend not to specify default resources and to leave this as a conscious
+  # choice for the user. This also increases chances charts run on environments with little
+  # resources, such as Minikube. If you do want to specify resources, uncomment the following
+  # lines, adjust them as necessary, and remove the curly braces after 'resources:'.
+  # limits:
+  #   cpu: 100m
+  #   memory: 128Mi
+  # requests:
+  #   cpu: 100m
+  #   memory: 128Mi
+
+nodeSelector: {}
+
+tolerations: []
+
+affinity: {}

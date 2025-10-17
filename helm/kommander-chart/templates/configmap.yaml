@@ -1,0 +1,11 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: {{ include "kommander.fullname" . }}-config
+  labels:
+    {{- include "kommander.labels" . | nindent 4 }}
+data:
+  rules.yaml: |-
+    {{- .Values.rules | nindent 4 }}
+  commands.yaml: |-
+    {{- .Values.commands | nindent 4 }}

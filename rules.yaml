@@ -1,0 +1,15 @@
+config:
+  RULES:
+    devops:
+      exclude_ns: []
+      verbs: [get, describe, list, delete, rollout restart]
+      types: [deployments, pods, namespaces, statefulsets, configmaps, services, ingresses, pods/log, replicasets, helmreleases, nodes]
+    dev-read:
+      exclude_ns: [kube-system, flux-system]
+      verbs: [get, describe, list]
+      types: [pods, services, deployments, statefulsets, ingress]
+    dev-write:
+      exclude_ns: [kube-system, flux-system]
+      verbs: [get, describe, list, delete, rollout restart]
+      types: [pods, deployments, statefulsets]
+

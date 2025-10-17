@@ -1,0 +1,80 @@
+kommander:
+  commands:
+    - name: "get"
+      description: "Obtém um recurso do Kubernetes (pods, deployments, etc)."
+      verb: "get"
+      baseCommand: "kubectl get"
+      options:
+        - name: "recurso"
+          description: "O tipo de recurso a ser listado (ex: pods)."
+          required: true
+        - name: "namespace"
+          description: "O namespace do recurso (opcional para todos)."
+          required: false
+        - name: "nome"
+          description: "O nome específico do recurso (opcional)."
+          required: false
+        - name: "grep"
+          description: "Filtra a saída com o texto fornecido."
+          required: false
+
+    - name: "describe"
+      description: "Descreve um recurso do Kubernetes."
+      verb: "describe"
+      baseCommand: "kubectl describe"
+      options:
+        - name: "recurso"
+          description: "O tipo de recurso (ex: pod, deployment)."
+          required: true
+        - name: "nome"
+          description: "O nome do recurso."
+          required: true
+        - name: "namespace"
+          description: "O namespace do recurso."
+          required: true
+
+    - name: "delete"
+      description: "Deleta um recurso do Kubernetes."
+      verb: "delete"
+      baseCommand: "kubectl delete"
+      options:
+        - name: "recurso"
+          description: "O tipo de recurso (ex: pod)."
+          required: true
+        - name: "nome"
+          description: "O nome do recurso."
+          required: true
+        - name: "namespace"
+          description: "O namespace do recurso."
+          required: true
+
+    - name: "rollout"
+      description: "Executa o rollout restart em um recurso."
+      verb: "rollout restart"
+      baseCommand: "kubectl rollout restart"
+      options:
+        - name: "recurso"
+          description: "O tipo de recurso (deployment, statefulset)."
+          required: true
+        - name: "nome"
+          description: "O nome do recurso."
+          required: true
+        - name: "namespace"
+          description: "O namespace do recurso."
+          required: true
+
+    - name: "logs"
+      description: "Mostra os logs de um pod."
+      verb: "get"
+      baseCommand: "kubectl logs"
+      options:
+        - name: "pod"
+          description: "O nome do pod para ver os logs."
+          required: true
+        - name: "namespace"
+          description: "O namespace do pod."
+          required: true
+        - name: "grep"
+          description: "Filtra a saída dos logs."
+          required: false
+

@@ -1,0 +1,8 @@
+# Padrões de arquivos e diretórios a serem ignorados
+.git/
+.github/
+.vscode/
+.idea/
+*.pyc
+*.pyo
+*~
